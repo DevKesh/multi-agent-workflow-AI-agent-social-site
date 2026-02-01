@@ -176,45 +176,6 @@ Open http://localhost:8501
 
 ## 🌐 Deployment
 
-### Railway Deployment
-
-1. **Create Railway account** at [railway.app](https://railway.app)
-
-2. **Install Railway CLI** (optional)
-```bash
-npm install -g @railway/cli
-```
-
-3. **Deploy from GitHub**
-   - Connect your GitHub repository to Railway
-   - Railway will auto-detect the `Procfile`
-   - Add environment variables in Railway dashboard:
-     - `OPENAI_API_KEY`: Your OpenAI API key
-     - `MODEL_NAME`: gpt-4o
-
-4. **Railway auto-configuration**
-   - Uses `Procfile` for web process
-   - Uses `runtime.txt` for Python version
-   - Uses `requirements.txt` for dependencies
-
-### Replit Deployment
-
-1. **Import to Replit**
-   - Go to [replit.com](https://replit.com)
-   - Click "Create Repl"
-   - Choose "Import from GitHub"
-   - Enter repository URL
-
-2. **Configure Secrets**
-   - Go to "Secrets" tab (lock icon)
-   - Add `OPENAI_API_KEY`
-   - Add `MODEL_NAME`
-
-3. **Run Command**
-```bash
-streamlit run site/app.py --server.port=8080
-```
-
 ### Streamlit Cloud Deployment
 
 1. **Deploy to Streamlit Cloud**
@@ -423,8 +384,8 @@ MIT License - Feel free to use this for education and research
 
 ## 🔗 Links
 
-- **Demo**: [Live Demo URL]
-- **GitHub**: [Repository URL]
+- **Demo**: [(https://multi-agent-workflow-ai-agent-social-site.streamlit.app/)]
+- **GitHub**: [https://github.com/DevKesh/multi-agent-workflow-AI-agent-social-site]
 - **AutoGen Docs**: https://microsoft.github.io/autogen/
 - **Streamlit Docs**: https://docs.streamlit.io/
 
