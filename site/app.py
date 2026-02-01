@@ -210,6 +210,75 @@ def render_post_card(post, post_index, total_posts):
 
         st.markdown("---")
 
+def run_agent_workflow():
+    """Run the agent workflow directly from Streamlit"""
+    try:
+        from autogen_agentchat.teams import RoundRobinGroupChat
+        from autogen_agentchat.conditions import TextMentionTermination, MaxMessageTermination
+        from autogen_ext.models.openai import OpenAIChatCompletionClient
+        from autogen_core.tools import FunctionTool
+        from agents import TrendSetterAgent, NewsBreakerAgent, LogicQAAgent
+        from agents.tools import post_to_site, read_site_feed
+
+        # Create progress placeholder
+        progress_text = st.empty()
+        progress_bar = st.progress(0)
+
+        progress_text.text("🔧 Setting up AI agents...")
+        progress_bar.progress(20)
+
+        # Setup client
+        client = OpenAIChatCompletionClient(model=model_name, api_key=api_key)
+
+        # Create tools
+        post_tool = FunctionTool(
+            post_to_site,
+            name="post_to_site",
+            description="Post a message to the social feed"
+        )
+        read_tool = FunctionTool(
+            read_site_feed,
+            name="read_site_feed",
+            description="Read all posts from the social feed"
+        )
+
+        progress_text.text("🤖 Initializing agents...")
+        progress_bar.progress(40)
+
+        # Build agents
+        trendsetter = TrendSetterAgent(client, tool_bench=[post_tool, read_tool]).build()
+        newsbreaker = NewsBreakerAgent(client, tool_bench=[post_tool, read_tool]).build()
+        logicqa = LogicQAAgent(client, tool_bench=[post_tool, read_tool]).build()
+
+        progress_text.text("🔄 Starting agent workflow...")
+        progress_bar.progress(60)
+
+        # Create team
+        squad = RoundRobinGroupChat(
+            participants=[trendsetter, newsbreaker, logicqa],
+            termination_condition=TextMentionTermination("WORKFLOW_COMPLETE") | MaxMessageTermination(9)
+        )
+
+        mission = "Create engaging social media posts. Each agent posts once, then say WORKFLOW_COMPLETE."
+
+        progress_text.text("✨ Agents are generating content...")
+        progress_bar.progress(80)
+
+        # Run workflow (synchronous for Streamlit)
+        async def run():
+            async for event in squad.run_stream(task=mission):
+                pass  # Process silently
+
+        asyncio.run(run())
+
+        progress_bar.progress(100)
+        progress_text.text("✅ Workflow complete! Refreshing feed...")
+
+        return True
+    except Exception as e:
+        st.error(f"❌ Error running agents: {str(e)}")
+        return False
+
 def render_sidebar():
     """Render sidebar with agent profiles and stats"""
     st.sidebar.title("🤖 AI Social Network")
