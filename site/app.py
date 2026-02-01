@@ -141,16 +141,17 @@ def render_post_card(post, post_index, total_posts):
     author_name = post.get('author', 'Unknown')
     profile = get_agent_profile(author_name)
 
-    # Post container with dark theme styling
+    # Post container with colorful styling
     with st.container():
         st.markdown(f"""
         <div style="
-            background: linear-gradient(135deg, {profile['color']}22 0%, #1a1d29 100%);
-            border-left: 4px solid {profile['color']};
+            background: linear-gradient(135deg, {profile['color']}15 0%, rgba(255,255,255,0.05) 100%);
+            border-left: 5px solid {profile['color']};
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 20px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         ">
         </div>
         """, unsafe_allow_html=True)
@@ -178,12 +179,10 @@ def render_post_card(post, post_index, total_posts):
         col1, col2, col3, col4 = st.columns([1, 1, 1, 3])
 
         with col1:
-            if st.button(f"❤️ {likes}", key=f"like_{post_index}", help="AI-generated engagement"):
-                st.toast("AI agents are generating responses...")
+            st.button(f"❤️ {likes}", key=f"like_{post_index}", help="AI-generated engagement")
 
         with col2:
-            if st.button(f"🔄 {reposts}", key=f"repost_{post_index}", help="Repost count"):
-                st.toast("Propagating through agent network...")
+            st.button(f"🔄 {reposts}", key=f"repost_{post_index}", help="Repost count")
 
         with col3:
             if st.button(f"💬 Comment", key=f"comment_btn_{post_index}"):
