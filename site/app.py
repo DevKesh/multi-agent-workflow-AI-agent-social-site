@@ -141,16 +141,16 @@ def render_post_card(post, post_index, total_posts):
     author_name = post.get('author', 'Unknown')
     profile = get_agent_profile(author_name)
 
-    # Post container with custom styling
+    # Post container with dark theme styling
     with st.container():
         st.markdown(f"""
         <div style="
-            background: linear-gradient(135deg, {profile['color']}22 0%, #ffffff 100%);
+            background: linear-gradient(135deg, {profile['color']}22 0%, #1a1d29 100%);
             border-left: 4px solid {profile['color']};
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         ">
         </div>
         """, unsafe_allow_html=True)
@@ -312,21 +312,135 @@ def main():
         initial_sidebar_state="expanded"
     )
 
-    # Custom CSS for better styling
+    # Custom CSS for dark mode
     st.markdown("""
     <style>
-        .main {
-            background-color: #f8f9fa;
+        /* Hide white header line */
+        header {
+            background-color: transparent !important;
         }
+        
+        [data-testid="stHeader"] {
+            background-color: transparent !important;
+        }
+        
+        /* Dark background for entire app */
+        .stApp {
+            background-color: #0e1117;
+        }
+        
+        .main {
+            background-color: #0e1117;
+        }
+        
+        /* All text white */
+        .stApp, .main, p, span, div, label, li {
+            color: #ffffff !important;
+        }
+        
+        /* Headers white */
+        h1, h2, h3, h4, h5, h6 {
+            color: #ffffff !important;
+        }
+        
+        /* Markdown text white */
+        .stMarkdown {
+            color: #ffffff !important;
+        }
+        
+        /* Buttons dark themed */
         .stButton button {
             border-radius: 20px;
-            border: 1px solid #e0e0e0;
-            background-color: white;
+            border: 1px solid #404040;
+            background-color: #262730;
+            color: #ffffff !important;
             padding: 5px 15px;
         }
         .stButton button:hover {
-            background-color: #f0f0f0;
-            border-color: #d0d0d0;
+            background-color: #31333f;
+            border-color: #606060;
+        }
+        
+        /* Sidebar dark */
+        [data-testid="stSidebar"] {
+            background-color: #0e1117;
+        }
+        
+        [data-testid="stSidebar"] * {
+            color: #ffffff !important;
+        }
+        
+        /* Metrics white text */
+        [data-testid="stMetricValue"] {
+            color: #ffffff !important;
+        }
+        
+        [data-testid="stMetricLabel"] {
+            color: #ffffff !important;
+        }
+        
+        /* Info/Alert boxes dark */
+        .stAlert {
+            background-color: #1e2130;
+            color: #ffffff !important;
+        }
+        
+        /* Expander dark */
+        .streamlit-expanderHeader {
+            background-color: #1e2130;
+            color: #ffffff !important;
+        }
+        
+        /* Post cards dark background */
+        .element-container {
+            color: #ffffff !important;
+        }
+        
+        /* Caption text light gray */
+        .caption, [data-testid="stCaptionContainer"] {
+            color: #b0b0b0 !important;
+        }
+        
+        /* Container backgrounds dark */
+        [data-testid="stVerticalBlock"] {
+            background-color: #0e1117;
+        }
+        
+        /* Remove white padding from elements */
+        .element-container {
+            background-color: transparent !important;
+        }
+        
+        /* Toast notifications dark */
+        [data-testid="stToast"] {
+            background-color: #1e2130 !important;
+            color: #ffffff !important;
+        }
+        
+        /* Remove white spaces */
+        .stMarkdown > div {
+            background-color: transparent !important;
+        }
+        
+        /* Column containers transparent */
+        [data-testid="column"] {
+            background-color: transparent !important;
+        }
+        
+        /* Block containers dark */
+        .block-container {
+            background-color: #0e1117 !important;
+        }
+        
+        /* Fix white lines on button interaction */
+        .stButton > button:focus {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+        
+        /* Remove focus rings */
+        *:focus {
+            outline: none !important;
         }
     </style>
     """, unsafe_allow_html=True)
@@ -335,20 +449,14 @@ def main():
     render_sidebar()
 
     # Main feed
-    st.title("🌐 AI Social Feed")
+    st.title("🌐 AI Agent's Social Feed")
     st.markdown("**Real-time multi-agent conversations powered by next-token prediction**")
 
-    # Auto-refresh button
-    col1, col2, col3 = st.columns([1, 1, 4])
+    # Refresh button only
+    col1, col2 = st.columns([1, 5])
     with col1:
         if st.button("🔄 Refresh Feed"):
             st.rerun()
-    with col2:
-        if st.button("▶️ Run Agents"):
-            with st.spinner("Running AI agents..."):
-                if run_agent_workflow():
-                    st.success("✅ Agents finished! Refreshing...")
-                    st.rerun()
 
     st.markdown("---")
 
