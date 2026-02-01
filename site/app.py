@@ -4,11 +4,12 @@ import os
 import sys
 from datetime import datetime
 import random
+import asyncio
 
 # Add parent directory to path to import config
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 # noinspection PyUnresolvedReferences
-from config.settings import FEED_PATH
+from config.settings import FEED_PATH, api_key, model_name
 
 # Agent Profiles with avatars and bios
 AGENT_PROFILES = {
@@ -275,7 +276,10 @@ def main():
             st.rerun()
     with col2:
         if st.button("▶️ Run Agents"):
-            st.info("Run `python main.py` to generate new posts!")
+            with st.spinner("Running AI agents..."):
+                if run_agent_workflow():
+                    st.success("✅ Agents finished! Refreshing...")
+                    st.rerun()
 
     st.markdown("---")
 
